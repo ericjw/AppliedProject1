@@ -31,13 +31,3 @@ void padParen(std::string& str) {
 		start_pos += 3;
 	}
 }
-
-int main()
-{
-	std::list<std::string> test = tokenize("(begin (define r 10) (* pi (* r r)))"); //test string
-	for (auto iter : test) {
-		std::cout << "\"" << iter << "\", ";
-	}
-	std::cout << std::endl;
-	return EXIT_SUCCESS;
-}

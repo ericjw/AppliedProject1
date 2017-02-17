@@ -16,7 +16,7 @@ set(interpreter_src
 set(test_src
   catch.hpp
   unittests.cpp
-  test_interpreter.cpp
+ # test_interpreter.cpp
 )
 
 # EDIT
@@ -31,8 +31,8 @@ set(vtscript_src
 # ------------------------------------------------
 
 # create the vtscript executable
-add_executable(vtscript ${vtscript_src})
-set_property(TARGET vtscript PROPERTY CXX_STANDARD 11)
+#add_executable(vtscript ${vtscript_src})
+#set_property(TARGET vtscript PROPERTY CXX_STANDARD 11)
 
 # setup testing
 set(TEST_FILE_DIR "${CMAKE_SOURCE_DIR}/tests")
@@ -46,4 +46,4 @@ add_executable(unittests ${interpreter_src} ${test_src})
 set_property(TARGET unittests PROPERTY CXX_STANDARD 11)
 
 enable_testing()
-add_test(unittests unittests)
+add_test(unittests unittests.cpp)

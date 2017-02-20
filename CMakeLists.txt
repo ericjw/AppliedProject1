@@ -16,7 +16,7 @@ set(interpreter_src
 set(test_src
   catch.hpp
   unittests.cpp
- # test_interpreter.cpp
+ test_interpreter.cpp
 )
 
 # EDIT
@@ -31,7 +31,7 @@ set(vtscript_src
 # ------------------------------------------------
 
 # create the vtscript executable
-#add_executable(vtscript ${vtscript_src})
+add_executable(vtscript ${vtscript_src})
 #set_property(TARGET vtscript PROPERTY CXX_STANDARD 11)
 
 # setup testing

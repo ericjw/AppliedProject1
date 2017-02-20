@@ -8,7 +8,7 @@
 
 class Interpreter {
 private:
-
+	Expression ast;
 
 public:
 
@@ -26,6 +26,7 @@ public:
 	Expression eval();
 
 	Expression readTokens(std::list<std::string> & tokens);
+	Expression getAST();
 
 };
 

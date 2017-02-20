@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 Interpreter::Interpreter() {
+	//default env()
 }
 
 Expression Interpreter::readTokens(std::list<std::string> & tokens) {
@@ -16,10 +17,7 @@ Expression Interpreter::readTokens(std::list<std::string> & tokens) {
 	if (left == token) {
 		Expression exp;
 		while (tokens.front() != right) {
-			Expression tmp = readTokens(tokens);
-			tmp.toString();
-			exp.append(tmp);
-			std::cout << std::endl;
+			exp.append(readTokens(tokens));
 		}
 		tokens.pop_front();
 		return exp;
@@ -46,7 +44,7 @@ bool Interpreter::parse(std::istream & expression) noexcept {
 	std::string tmpString(std::istreambuf_iterator<char>(expression), {});
 	
 	try {
-		readTokens(tokenize(tmpString));
+		ast = readTokens(tokenize(tmpString));
 		return true;
 	}
 	catch (...){
@@ -54,9 +52,12 @@ bool Interpreter::parse(std::istream & expression) noexcept {
 	}
 }
 
+Expression Interpreter::getAST() {
+	return ast;
+}
 
 
 
-Expression eval() {
+Expression Interpreter::eval() {
 	return Expression(); //placeholder
 }

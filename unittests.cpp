@@ -20,6 +20,10 @@ TEST_CASE("tests tokenizer", "[tokenize]") {
 	std::list<std::string> outputList = tokenize(tests[2]);
 
 	REQUIRE(outputList == testList);
+
+	testList = {"(", "begin", "(", "define"};
+	outputList = tokenize("(begin (define ;r 10) (* pi (* r r)))");
+
 }
 
 TEST_CASE("tests expression", "[expression]") {
@@ -70,5 +74,5 @@ TEST_CASE("tests interpreter", "[interpreter]") {
 	Interpreter inter;
 	std::list<std::string> test = {"(", "+", "a", "(", "-", "1e4", ")", ")"};
 	Expression root = inter.readTokens(test);
-	REQUIRE(root.getExpVectorSize() == 2);
+	REQUIRE(root.getExpVectorSize() == 3);
 }

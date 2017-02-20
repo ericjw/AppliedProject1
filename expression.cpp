@@ -1,34 +1,86 @@
 #include "expression.hpp"
 
+#include <iostream>
+#include <cstdlib>
+
 Expression::Expression() {
-	type = None;
+	currAtom.type = None;
 }
 
 Expression::Expression(bool value) {
-	type = Boolean;
-	boolVal = value;
+	currAtom.type = Boolean;
+	currAtom.boolVal = value;
 }
 
 Expression::Expression(double value) {
-	type = Number;
-	numberVal = value;
+	currAtom.type = Number;
+	currAtom.numberVal = value;
 }
 
 Expression::Expression(const std::string & value) {
-	type = Symbol;
-	symbolVal = value;
+	currAtom.type = Symbol;
+	currAtom.symbolVal = value;
 }
 
-bool getBooleanValue() {
-	return boolVal;
+AtomType Expression::getType() {
+	return currAtom.type;
 }
 
-std::string getSymbolValue() {
-	return symbolVal;
+bool Expression::getBooleanValue() {
+	return currAtom.boolVal;
 }
 
+double Expression::getNumberValue() {
+	return currAtom.numberVal;
+}
 
+std::string Expression::getSymbolValue() {
+	return currAtom.symbolVal;
+}
 
-bool operator==(const Expression & exp) const noexcept {
-	return (type == exp.type)
+int Expression::getExpVectorSize() {
+	return childVector.size();
+}
+
+void Expression::append(Expression exp) {
+	childVector.push_back(exp);
+}
+
+bool Expression::operator==(const Expression & exp) const noexcept {
+	if (currAtom.type != exp.currAtom.type)
+		return false;
+	else if (exp.childVector.size() == exp.childVector.size()){
+		switch (currAtom.type) {
+			case Boolean:
+				return currAtom.boolVal == exp.currAtom.boolVal;
+				break;
+			case Number:
+				return currAtom.numberVal == exp.currAtom.numberVal;
+				break;
+			case Symbol:
+				return currAtom.symbolVal == exp.currAtom.symbolVal;
+				break;
+			case None:
+				return true;
+			default:
+				return false;
+		}
+	}
+	else {
+		return false;
+	}
+}
+
+void Expression::toString() {
+	switch (currAtom.type) {
+	case Boolean:
+		std::cout << currAtom.boolVal;
+		break;
+	case Number:
+		std::cout << currAtom.numberVal;
+		break;
+	case Symbol:
+		std::cout << currAtom.symbolVal;
+		break;
+	}
 }

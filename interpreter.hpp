@@ -1,6 +1,17 @@
+#ifndef _INTERPRETER_H_
+#define _INTERPRETER_H_
+
 #include "expression.hpp"
+#include "tokenize.hpp"
+#include <list>
+#include <string>
 
 class Interpreter {
+private:
+
+
+public:
+
 
 	// Default construct an Interpreter with the default environment and an empty AST
 	Interpreter::Interpreter();
@@ -14,4 +25,8 @@ class Interpreter {
 	// the exception message string should document the nature of the semantic error 
 	Expression eval();
 
+	Expression readTokens(std::list<std::string> & tokens);
+
 };
+
+#endif

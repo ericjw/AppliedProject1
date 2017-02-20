@@ -1,3 +1,6 @@
+#ifndef _TOKENIZE_H_
+#define _TOKENIZE_H_
+
 #include <list>
 #include <string>
 #include <iostream>
@@ -7,3 +10,5 @@
 std::list<std::string> tokenize(std::string input);
 //helper method to replace parenthese
 void padParen(std::string& str);
+
+#endif

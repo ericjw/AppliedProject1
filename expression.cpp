@@ -46,6 +46,10 @@ void Expression::append(Expression exp) {
 	childVector.push_back(exp);
 }
 
+std::vector<Expression> Expression::getArgs() {
+	return childVector;
+}
+
 bool Expression::operator==(const Expression & exp) const noexcept {
 	if (currAtom.type != exp.currAtom.type)
 		return false;

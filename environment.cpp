@@ -1,53 +1,57 @@
 #include "environment.hpp"
 
-bool not (bool arg) {
-	return !arg;
+Expression notFunc(Expression exp) {
+	return Expression(!(exp.getArgs().front().getBooleanValue()));
 }
 
-bool and (bool arg1, bool arg2) {
-	return arg1 && arg2;
+Expression andFunc(Expression exp) {
+	return Expression();
 }
 
-bool or (bool arg1, bool arg2) {
-	return arg1 == arg2;
+Expression orFunc(Expression exp) {
+	return Expression();
 }
 
-bool less(double arg1, double arg2) {
-	return arg1 < arg2;
+Expression lessFunc(Expression exp) {
+	return Expression();
 }
 
-bool less_equal(double arg1, double arg2) {
-	return arg1 <= arg2;
+Expression greaterFunc(Expression exp) {
+	return Expression();
 }
 
-bool greater(double arg1, double arg2) {
-	return arg1 > arg2;
+Expression less_equalFunc(Expression exp) {
+	return Expression();
 }
 
-bool greater_equal(double arg1, double arg2) {
-	return arg1 >= arg2;
+Expression greater_equalFunc(Expression exp) {
+	return Expression();
 }
 
-bool equal(double arg1, double arg2) {
-	return arg1 == arg2;
+Expression equalFunc(Expression exp) {
+	return Expression();
 }
 
-double plus(double arg1, double arg2) {
-	return arg1 + arg2;
+Expression plusFunc(Expression exp) {
+	return Expression();
 }
 
-double minus(double arg1, double arg2) {
-	return arg1 - arg2;
+Expression negFunc(Expression exp) {
+	return Expression();
 }
 
-double neg(double arg1) {
-	return -arg1;
+Expression minusFunc(Expression exp) {
+	return Expression();
 }
 
-double mult(double arg1, double arg2) {
-	return arg1 * arg2;
+Expression multFunc(Expression exp) {
+	return Expression();
 }
 
-double div(double arg1, double arg2) {
-	return arg1 / arg2;
+Expression divFunc(Expression exp) {
+	return Expression();
+}
+
+Expression piFunc(Expression exp) {
+	return Expression();
 }

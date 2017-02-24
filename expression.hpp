@@ -40,6 +40,7 @@ public:
 	double getNumberValue();
 	bool getBooleanValue();
 	std::string getSymbolValue();
+	std::vector<Expression> getArgs();
 
 	void append(Expression exp);
 

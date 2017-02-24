@@ -1,32 +1,44 @@
 #ifndef _ENVIRONMENT_H_
 #define _ENVIRONMENT_H_
+#include "expression.hpp"
 
 #include <unordered_map>
 using std::unordered_map;
 
-typedef void(*ScriptFunction)(void);
-unordered_map < std::string, ScriptFunction > env;
+typedef Expression(*functionptr)(Expression);
 
-bool not (bool arg);
-bool and (bool arg1, bool arg2);
-bool or (bool arg1, bool arg2);
 
-bool less(double arg1, double arg2);
+//function declarations
+Expression notFunc(Expression arg);
+Expression andFunc(Expression arg);
+Expression orFunc(Expression arg);
+Expression lessFunc(Expression arg);
+Expression greaterFunc(Expression arg);
+Expression less_equalFunc(Expression arg);
+Expression greater_equalFunc(Expression arg);
+Expression equalFunc(Expression arg);
+Expression plusFunc(Expression arg);
+Expression negFunc(Expression arg);
+Expression minusFunc(Expression arg);
+Expression multFunc(Expression arg);
+Expression divFunc(Expression arg);
+Expression piFunc(Expression arg);
 
-bool less_equal(double arg1, double arg2);
-bool greater(double arg1, double arg2);
+//function pointers
+extern Expression(*notPtr)(Expression) = &notFunc;
+extern Expression(*andPtr)(Expression) = &andFunc;
+extern Expression(*orPtr)(Expression) = &orFunc;
+extern Expression(*lessPtr)(Expression) = &lessFunc;
+extern Expression(*greaterPtr)(Expression) = &greaterFunc;
+extern Expression(*less_equalPtr)(Expression) = &less_equalFunc;
+extern Expression(*greater_equalPtr)(Expression) = &greater_equalFunc;
+extern Expression(*equalPtr)(Expression) = &equalFunc;
+extern Expression(*plusPtr)(Expression) = &plusFunc;
+extern Expression(*negPtr)(Expression) = &negFunc;
+extern Expression(*minusPtr)(Expression) = &minusFunc;
+extern Expression(*multPtr)(Expression) = &multFunc;
+extern Expression(*divPtr)(Expression) = &divFunc;
+extern Expression(*piPtr)(Expression) = &piFunc;
 
-bool greater_equal(double arg1, double arg2);
-bool equal(double arg1, double arg2);
-
-double plus(double arg1, double arg2);
-
-double minus(double arg1, double arg2);
-
-double neg(double arg1);
-
-double mult(double arg1, double arg2);
-
-double div(double arg1, double arg2);
-
+unordered_map < std::string, functionptr > env =  { { "not", (*notPtr) } };
 #endif

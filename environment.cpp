@@ -1,5 +1,15 @@
 #include "environment.hpp"
 
+void insert(std::string name, Expression newVar) {
+	vars.insert({name, newVar});
+}
+
+void initialize() {
+	env = { { "not", (notFunc) },{ "and", (andFunc) },{ "or", (orFunc) },{ "<", (lessFunc) },
+	{ "<=", (less_equalFunc) },{ ">", (greaterFunc) },{ ">=", (greater_equalFunc) },{ "=", (equalFunc) },{ "+", (plusFunc) },{ "-", (minusFunc) },
+	{ "*", (multFunc) },{ "/", (divFunc) },{ "pi", (piFunc) } };
+}
+
 Expression notFunc(Expression exp) {
 	return Expression(!(exp.getArgs().front().getBooleanValue()));
 }

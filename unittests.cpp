@@ -75,7 +75,7 @@ TEST_CASE("tests interpreter", "[interpreter]") {
 	REQUIRE(root.getExpVectorSize() == 2);
 
 
-
+	
 	std::vector<Expression> args = root.getArgs();
 	root.toString();
 	args.front().toString();

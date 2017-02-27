@@ -8,7 +8,6 @@ using std::unordered_map;
 
 typedef Expression(*functionptr)(Expression);
 
-
 //function declarations
 Expression notFunc(Expression arg);
 Expression andFunc(Expression arg);
@@ -26,20 +25,8 @@ Expression divFunc(Expression arg);
 Expression piFunc(Expression arg);
 
 //function pointers
-extern Expression(*notPtr)(Expression) = &notFunc;
-extern Expression(*andPtr)(Expression) = &andFunc;
-extern Expression(*orPtr)(Expression) = &orFunc;
-extern Expression(*lessPtr)(Expression) = &lessFunc;
-extern Expression(*greaterPtr)(Expression) = &greaterFunc;
-extern Expression(*less_equalPtr)(Expression) = &less_equalFunc;
-extern Expression(*greater_equalPtr)(Expression) = &greater_equalFunc;
-extern Expression(*equalPtr)(Expression) = &equalFunc;
-extern Expression(*plusPtr)(Expression) = &plusFunc;
-extern Expression(*negPtr)(Expression) = &negFunc;
-extern Expression(*minusPtr)(Expression) = &minusFunc;
-extern Expression(*multPtr)(Expression) = &multFunc;
-extern Expression(*divPtr)(Expression) = &divFunc;
-extern Expression(*piPtr)(Expression) = &piFunc;
+typedef Expression(*funcPtr)(Expression);
 
-unordered_map < std::string, functionptr > env =  { { "not", (*notPtr) } };
+unordered_map < std::string, functionptr > env;
+unordered_map < std::string, Expression > vars;
 #endif

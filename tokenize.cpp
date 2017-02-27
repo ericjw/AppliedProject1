@@ -1,7 +1,7 @@
 #include "tokenize.hpp"
 
 //tokenizes input given as a string
-std::list<std::string> tokenize(std::string input) {
+std::list<std::string>& tokenize(std::string input) {
 	//scrub comments
 	input = input.substr(0, input.find(";", 0));
 

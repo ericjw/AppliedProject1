@@ -14,7 +14,7 @@ public:
 
 
 	// Default construct an Interpreter with the default environment and an empty AST
-	Interpreter::Interpreter();
+	Interpreter();
 
 	// Given a vtscript program as a std::istream, attempt to parse into an internal AST
 	// return true on success, false on failure
@@ -27,6 +27,7 @@ public:
 
 	Expression readTokens(std::list<std::string> & tokens);
 	Expression getAST();
+	Expression recurseEval(Expression curr);
 
 };
 

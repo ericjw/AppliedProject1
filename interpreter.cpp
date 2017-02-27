@@ -62,5 +62,24 @@ Expression Interpreter::getAST() {
 
 
 Expression Interpreter::eval() {
-	return Expression(); //placeholder
+
+
+	/*
+	special cases
+	
+	*/
+	recurseEval(ast);
+}
+
+Expression Interpreter::recurseEval(Expression curr) {
+	std::vector<Expression> args = curr.getArgs();
+	if (args.size() == 0) {
+		return curr;
+	}
+	else {
+		for (auto iter : args) {
+			recurseEval(iter);
+			
+		}
+	}
 }

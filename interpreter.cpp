@@ -10,12 +10,15 @@ Interpreter::Interpreter() {
 Expression Interpreter::readTokens(std::list<std::string> & tokens) {
 	std::string left = "(";
 	std::string right = ")";
+	Expression exp;
 	if (tokens.size() == 0)
 		throw "unexpected EOF";
 	std::string token = tokens.front();
 	tokens.pop_front();
-	if (left == token) {
-		Expression exp;
+	if (left == token){
+		token = tokens.front();
+		exp =  Expression(token);
+		tokens.pop_front();
 		while (tokens.front() != right) {
 			exp.append(readTokens(tokens));
 		}

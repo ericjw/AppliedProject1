@@ -5,7 +5,6 @@
 #include "expression.hpp"
 #include "interpreter.hpp"
 
-
 TEST_CASE("tests tokenizer", "[tokenize]") {
 	std::string tests[] = {
 		"(+ a ( - 4 ))",
@@ -70,9 +69,17 @@ TEST_CASE("tests expression", "[expression]") {
 
 
 TEST_CASE("tests interpreter", "[interpreter]") {
-	
 	Interpreter inter;
-	std::list<std::string> test = {"(", "+", "a", "(", "-", "1e4", ")", ")"};
+	std::list<std::string> test = {"(", "+", "a", "(", "+", "-", "(", "4", ")", "4", ")", ")", ")"};
 	Expression root = inter.readTokens(test);
-	REQUIRE(root.getExpVectorSize() == 3);
+	REQUIRE(root.getExpVectorSize() == 2);
+
+
+
+	std::vector<Expression> args = root.getArgs();
+	root.toString();
+	args.front().toString();
+	args.back().toString();
+	args.back().getArgs().front().toString();
 }
+

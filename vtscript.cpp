@@ -13,12 +13,16 @@ int main(int argc, char* argv[])
 	if (argc == 1) {
 		while (!cin.eof()) {
 			cout << "vtscript>";
-			inter.parse(cin);
-			inter.eval();
-			Expression tmp = inter.getAST();
-			std::cout << "(";
-			tmp.toString();
-			std::cout << ")";
+			std::string in;
+			std::getline(cin, in);
+			cout << in << std::endl;
+			
+			//inter.parse(cin);
+			//inter.eval();
+			//Expression tmp = inter.getAST();
+			//std::cout << "(";
+			//tmp.toString();
+			//std::cout << ")";
 		}
 	}
 	else if (argc == 2) {

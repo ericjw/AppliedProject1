@@ -3,6 +3,7 @@
 #include "expression.hpp"
 
 #include <unordered_map>
+#include <cmath>
 using std::unordered_map;
 
 typedef Expression(*functionptr)(Expression);

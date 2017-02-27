@@ -5,53 +5,84 @@ Expression notFunc(Expression exp) {
 }
 
 Expression andFunc(Expression exp) {
-	return Expression();
+	bool value = true;
+	for (auto iter : exp.getArgs()) {
+		value = value && iter.getBooleanValue();
+	}
+	return Expression(value);
 }
 
 Expression orFunc(Expression exp) {
-	return Expression();
+	bool value = true;
+	for (auto iter : exp.getArgs()) {
+		value = value || iter.getBooleanValue();
+	}
+	return Expression(value);
 }
 
 Expression lessFunc(Expression exp) {
-	return Expression();
+	std::vector<Expression> tmp = exp.getArgs();
+	bool value = tmp.front().getNumberValue() < tmp.at(1).getNumberValue();
+	return Expression(value);
 }
 
 Expression greaterFunc(Expression exp) {
-	return Expression();
+	std::vector<Expression> tmp = exp.getArgs();
+	bool value = tmp.front().getNumberValue() > tmp.at(1).getNumberValue();
+	return Expression(value);
 }
 
 Expression less_equalFunc(Expression exp) {
-	return Expression();
+	std::vector<Expression> tmp = exp.getArgs();
+	bool value = tmp.front().getNumberValue() <= tmp.at(1).getNumberValue();
+	return Expression(value);
 }
 
 Expression greater_equalFunc(Expression exp) {
-	return Expression();
+	std::vector<Expression> tmp = exp.getArgs();
+	bool value = tmp.front().getNumberValue() >= tmp.at(1).getNumberValue();
+	return Expression(value);
 }
 
 Expression equalFunc(Expression exp) {
-	return Expression();
+	std::vector<Expression> tmp = exp.getArgs();
+	bool value = tmp.front().getNumberValue() == tmp.at(1).getNumberValue();
+	return Expression(value);
 }
 
+
 Expression plusFunc(Expression exp) {
-	return Expression();
+	double value = 0;
+	for (auto iter : exp.getArgs()) {
+		value += iter.getNumberValue();
+	}
+	return Expression(value);
 }
 
 Expression negFunc(Expression exp) {
-	return Expression();
+	return Expression(-exp.getArgs().front().getNumberValue());
 }
 
 Expression minusFunc(Expression exp) {
-	return Expression();
+	std::vector<Expression> tmp = exp.getArgs();
+	double value = tmp.front().getNumberValue() - tmp.at(1).getNumberValue();
+	return Expression(value);
 }
 
 Expression multFunc(Expression exp) {
-	return Expression();
+	double value = 0;
+	for (auto iter : exp.getArgs()) {
+		value *= iter.getNumberValue();
+	}
+	return Expression(value);
 }
 
 Expression divFunc(Expression exp) {
-	return Expression();
+	std::vector<Expression> tmp = exp.getArgs();
+	double value = tmp.front().getNumberValue() / tmp.at(1).getNumberValue();
+	return Expression(value);
 }
 
 Expression piFunc(Expression exp) {
-	return Expression();
+	return Expression(std::atan2(0,-1));
 }

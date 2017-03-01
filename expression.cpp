@@ -74,17 +74,3 @@ bool Expression::operator==(const Expression & exp) const noexcept {
 		return false;
 	}
 }
-
-void Expression::toString() {
-	switch (currAtom.type) {
-	case Boolean:
-		std::cout << currAtom.boolVal;
-		break;
-	case Number:
-		std::cout << currAtom.numberVal;
-		break;
-	case Symbol:
-		std::cout << currAtom.symbolVal;
-		break;
-	}
-}

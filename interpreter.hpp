@@ -2,6 +2,7 @@
 #define _INTERPRETER_H_
 
 #include "expression.hpp"
+#include "environment.hpp"
 #include "tokenize.hpp"
 #include <list>
 #include <string>
@@ -9,6 +10,8 @@
 class Interpreter {
 private:
 	Expression ast;
+	Environment envir;
+	Tokenizer tok;
 
 public:
 
@@ -25,7 +28,7 @@ public:
 	// the exception message string should document the nature of the semantic error 
 	Expression eval();
 
-	Expression readTokens(std::list<std::string> & tokens);
+	Expression readTokens(std::list<std::string>& tokens);
 	Expression getAST();
 	Expression recurseEval(Expression curr);
 

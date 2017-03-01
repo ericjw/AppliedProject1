@@ -6,23 +6,26 @@
 #include "interpreter.hpp"
 
 TEST_CASE("tests tokenizer", "[tokenize]") {
+	Tokenizer tok;
 	std::string tests[] = {
 		"(+ a ( - 4 ))",
 		"(if (< a b) b a)",
 		"(begin (define r 10) (* pi (* r r)))",
 		""
 	};
-
+	
 	std::list<std::string> testList = {
-		"(", "begin", "(", "define", "r", "10", ")", "(", "*", "pi", "(", "*", "r", "r", ")", ")", ")" 
+    	"(", "begin", "(", "define", "r", "10", ")", "(", "*", "pi", "(", "*", "r", "r", ")", ")", ")" 
 	};
-	std::list<std::string> outputList = tokenize(tests[2]);
+
+	std::list<std::string> outputList = tok.tokenize(tests[2]);
 
 	REQUIRE(outputList == testList);
 
 	testList = {"(", "begin", "(", "define"};
-	outputList = tokenize("(begin (define ;r 10) (* pi (* r r)))");
+	outputList = tok.tokenize("(begin (define ;r 10) (* pi (* r r)))");
 
+	REQUIRE(outputList == testList);
 }
 
 TEST_CASE("tests expression", "[expression]") {
@@ -67,19 +70,81 @@ TEST_CASE("tests expression", "[expression]") {
 	
 }
 
+TEST_CASE("tests interpreter ast creation", "[interpreter]") {
 
-TEST_CASE("tests interpreter", "[interpreter]") {
 	Interpreter inter;
-	std::list<std::string> test = {"(", "+", "a", "(", "+", "-", "(", "4", ")", "4", ")", ")", ")"};
-	Expression root = inter.readTokens(test);
-	REQUIRE(root.getExpVectorSize() == 2);
+	Expression root;
+	std::list<std::string> test;
 
+	//test readtokens directly
+	//test = {"(", "+", "a", "(", "+", "-", "(", "4", ")", "4", ")", ")", ")"};
+	//root = inter.readTokens(test);
+	//REQUIRE(root.getExpVectorSize() == 2);
+	/*
+	test = { "(", "(", "(", "(", "+", "a", "(", "+", "-", "(", "4", ")", "4", ")", ")", ")" };
+	try {
+		root = inter.readTokens(test);
+		std::cout << "no exception" << std::endl;
+	}
+	catch (...) {
+		std::cout << "exception" << std::endl;
+	}
+	*/
 
+	//test exceptions from parse
+	std::istringstream excep("((((((if (< a b) b a)");
+	REQUIRE(!inter.parse(excep));
+	excep.str("(if (< a b) b a))))))"); //no exception is thrown								
+	REQUIRE(!inter.parse(excep));
+	excep.str("");
+	REQUIRE(!inter.parse(excep));
 	
+	//test parse
+	std::istringstream is("(if (< a b) b a)"); 
+	REQUIRE(inter.parse(is));
+	root = inter.getAST();
+	REQUIRE(root.getSymbolValue() == "if");
 	std::vector<Expression> args = root.getArgs();
-	root.toString();
-	args.front().toString();
-	args.back().toString();
-	args.back().getArgs().front().toString();
+	REQUIRE(args.at(0).getSymbolValue() == "<");
+	REQUIRE(args.at(1).getSymbolValue() == "b");
+	REQUIRE(args.at(2).getSymbolValue() == "a");
+	args = args.at(0).getArgs();
+	REQUIRE(args.at(0).getSymbolValue() == "a");
+	REQUIRE(args.at(1).getSymbolValue() == "b");
+	
 }
 
+TEST_CASE("tests interpreter eval", "[interpreter]") {
+	std::istringstream is("(if (>= pi 2) pi 4)"); // works with <, >, <=, >=
+	Interpreter inter;
+	inter.parse(is);
+	Expression tmp = inter.eval();
+	std::cout << "!!!!!!!!!!-----> if stmnt " << tmp.getNumberValue() << std::endl;
+
+	is.str("(begin (define r 10) (* pi (* r r)))"); // works
+	inter.parse(is);
+	tmp = inter.eval();
+	std::cout << "!!!!!!!!!!-----> longer " << tmp.getNumberValue() << std::endl;
+
+	is.str("(begin (define a 1)(define b pi)(if (< a b) b a))");
+	inter.parse(is);
+	tmp = inter.eval();
+	std::cout << "!!!!!!!!!!-----> all special " << tmp.getNumberValue() << std::endl;
+}
+
+TEST_CASE("tests environment", "[environment]") {
+	Environment env;
+	env.initialize();
+
+	Expression tmp = env.insert("test", Expression(true));
+	REQUIRE(env.varExists("test"));
+	REQUIRE(env.getVal("test") == tmp);
+	REQUIRE(env.getVal("pi") == Expression(std::atan2(0, -1)));
+
+	REQUIRE(env.getFunc("DNE") == nullptr);
+	REQUIRE(typeid(env.getFunc("+")) == typeid(Environment::funcPtr));
+
+	//test all functions here
+
+	REQUIRE(env.notFunc(Expression(false)).getBooleanValue());
+}

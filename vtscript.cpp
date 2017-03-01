@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 			inter.eval();
 		}
 		Expression root = inter.getAST();
-		root.toString();
+		//root.toString();
 	}
 	else if (argc == 3) {
 		std::istringstream ss(argv[2]);

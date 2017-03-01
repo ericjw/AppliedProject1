@@ -1,7 +1,7 @@
 #include "tokenize.hpp"
 
 //tokenizes input given as a string
-std::list<std::string>& tokenize(std::string input) {
+std::list<std::string> Tokenizer::tokenize(std::string input) {
 	//scrub comments
 	input = input.substr(0, input.find(";", 0));
 
@@ -22,7 +22,7 @@ std::list<std::string>& tokenize(std::string input) {
 }
 
 //iterates through string and adds whitespace to parentheses
-void padParen(std::string& str) {
+void Tokenizer::padParen(std::string& str) {
 	int start_pos = 0;
 	while ((start_pos = str.find("(", start_pos)) != std::string::npos) {
 		str.replace(start_pos, 1, " ( ");

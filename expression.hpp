@@ -43,7 +43,5 @@ public:
 	std::vector<Expression> getArgs();
 
 	void append(Expression exp);
-
-	void toString();
 };
 #endif

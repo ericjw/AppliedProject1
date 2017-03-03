@@ -53,24 +53,23 @@ std::vector<Expression> Expression::getArgs() {
 bool Expression::operator==(const Expression & exp) const noexcept {
 	if (currAtom.type != exp.currAtom.type)
 		return false;
-	else if (exp.childVector.size() == exp.childVector.size()){
+	else if (exp.childVector.size() == exp.childVector.size()) {
 		switch (currAtom.type) {
-			case Boolean:
-				return currAtom.boolVal == exp.currAtom.boolVal;
-				break;
-			case Number:
-				return currAtom.numberVal == exp.currAtom.numberVal;
-				break;
-			case Symbol:
-				return currAtom.symbolVal == exp.currAtom.symbolVal;
-				break;
-			case None:
-				return true;
-			default:
-				return false;
+		case Boolean:
+			return (currAtom.boolVal == exp.currAtom.boolVal);
+			break;
+		case Number:
+			return (currAtom.numberVal == exp.currAtom.numberVal);
+			break;
+		case Symbol:
+			return (currAtom.symbolVal == exp.currAtom.symbolVal);
+			break;
+		case None:
+			return true;
+		default:
+			return true;
 		}
 	}
-	else {
+	else
 		return false;
-	}
 }

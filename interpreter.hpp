@@ -15,7 +15,6 @@ private:
 
 public:
 
-
 	// Default construct an Interpreter with the default environment and an empty AST
 	Interpreter();
 
@@ -31,7 +30,6 @@ public:
 	Expression readTokens(std::list<std::string>& tokens);
 	Expression getAST();
 	Expression recurseEval(Expression curr);
-
 };
 
 #endif

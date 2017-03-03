@@ -1,6 +1,7 @@
 #include "interpreter.hpp"
 #include "expression.hpp"
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
 using std::ifstream;
@@ -9,46 +10,122 @@ using std::cin;
 
 int main(int argc, char* argv[])
 {
-	Interpreter inter;
 	if (argc == 1) {
+		Expression tmp;
+		Interpreter inter;
 		while (!cin.eof()) {
-			cout << "vtscript>";
-			std::string in;
-			std::getline(cin, in);
-			cout << in << std::endl;
-			
-			//inter.parse(cin);
-			//inter.eval();
-			//Expression tmp = inter.getAST();
-			//std::cout << "(";
-			//tmp.toString();
-			//std::cout << ")";
+			cout << "vtscript> ";
+			std::string express;
+			std::getline(cin, express);
+
+			std::istringstream iss(express);
+			if (!inter.parse(iss)) {
+				std::cout << "Error: Invalid Expression. Could not parse." << std::endl;
+				inter = Interpreter();
+			}
+			else {
+				try {
+					Expression tmp = inter.eval();
+					std::cout << "(";
+					if (tmp.getType() == AtomType::Symbol) {
+						std::cout << tmp.getSymbolValue();
+					}
+					else if (tmp.getType() == AtomType::Number) {
+						std::cout << tmp.getNumberValue();
+					}
+					else {
+						if (tmp.getBooleanValue())
+							std::cout << "True";
+						else
+							std::cout << "False";
+					}
+					std::cout << ")" << std::endl;
+				}
+				catch (InterpreterSemanticError e) {
+					std::cout << "Error: " << e.what() << std::endl;
+					inter = Interpreter();
+				}
+			}
 		}
 	}
 	else if (argc == 2) {
-		std::string line;
-		std::ifstream file(argv[1]);
-		while (std::getline(file, line))
-		{
-			std::istringstream iss(line);
-			inter.parse(iss);
-			inter.eval();
+		std::string fname(argv[1]);
+		std::ifstream ifs(fname);
+		
+		Interpreter inter;
+		if (!inter.parse(ifs)) {
+			std::cout << "Error: Invalid Expression. Could not parse." << std::endl;
+			inter = Interpreter();
+			return EXIT_FAILURE;
 		}
-		Expression root = inter.getAST();
-		//root.toString();
-	}
-	else if (argc == 3) {
-		std::istringstream ss(argv[2]);
-		if (argv[1] == "-e") {
-			if (inter.parse(ss) == false) {
-				std::cerr << "Error: Invalid Expression. Could not parse." << std::endl;
+		else {
+			try {
+				Expression tmp = inter.eval();
+				std::cout << "(";
+				if (tmp.getType() == AtomType::Symbol) {
+					std::cout << tmp.getSymbolValue();
+				}
+				else if (tmp.getType() == AtomType::Number) {
+					std::cout << tmp.getNumberValue();
+				}
+				else {
+					if (tmp.getBooleanValue())
+						std::cout << "True";
+					else
+						std::cout << "False";
+				}
+				std::cout << ")" << std::endl;
+			}
+			catch (InterpreterSemanticError e) {
+				std::cout << "Error: " << e.what() << std::endl;
+				inter = Interpreter();
 				return EXIT_FAILURE;
 			}
-			inter.eval();
 		}
+		return EXIT_SUCCESS;
+	}
+	else if (argc == 3) {
+		if (std::string(argv[1]) != std::string("-e")) {
+			std::cout << "Error: Invalid flag" << std::endl;
+			return EXIT_FAILURE;
+		}
+		Interpreter inter;
+		std::string express(argv[2]);
+
+		std::istringstream iss(express);
+		if (!inter.parse(iss)) {
+			std::cout << "Error: Invalid Expression. Could not parse." << std::endl;
+			inter = Interpreter();
+			return EXIT_FAILURE;
+		}
+		else {
+			try {
+				Expression tmp = inter.eval();
+				std::cout << "(";
+				if (tmp.getType() == AtomType::Symbol) {
+					std::cout << tmp.getSymbolValue();
+				}
+				else if (tmp.getType() == AtomType::Number) {
+					std::cout << tmp.getNumberValue();
+				}
+				else {
+					if (tmp.getBooleanValue())
+						std::cout << "True";
+					else
+						std::cout << "False";
+				}
+				std::cout << ")" << std::endl;
+			}
+			catch (InterpreterSemanticError e) {
+				std::cout << "Error: " << e.what() << std::endl;
+				inter = Interpreter();
+				return EXIT_FAILURE;
+			}
+		}
+		return EXIT_SUCCESS;
 	}
 	else {
-		//invalid arguments
+		std::cout << "Error: Invalid number of arguments to program" << std::endl;
 	}
 
 }

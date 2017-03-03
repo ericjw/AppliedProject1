@@ -5,6 +5,9 @@
 #include <cstdlib>
 #include <vector>
 #include <stdexcept>
+#include <cctype>
+#include <sstream>
+#include <algorithm>
 
 Interpreter::Interpreter() {
 	envir.initialize();
@@ -17,50 +20,105 @@ Expression Interpreter::readTokens(std::list<std::string>& tokens) {
 
 	if (tokens.size() == 0)
 		throw std::logic_error("unexpected eof");
-
+	
 	std::string token = tokens.front();
 	tokens.pop_front();
 
 	if (left == token){
 		token = tokens.front();
-		if (token == left)
+		if (token == left || token == right)
 			throw std::logic_error("invalid paren");
-		exp = Expression(token);
+
+
+
+		if (token == "True") {
+			exp = Expression(true);
+		}
+		else if (token == "False") {
+			exp = Expression(false);
+		}
+		else {
+			try {
+				std::stringstream value(token);
+				double d;
+				value >> d;
+				if (value.fail()) { //??
+									//std::cout << "!!!!!!!!!!!!" << std::endl;
+					throw std::logic_error("not a num");
+				}
+				if (value.eof())
+					exp = Expression(d);
+				else
+					throw std::invalid_argument("bad number string");
+			}
+			catch (std::invalid_argument e) {
+				throw e;
+			}
+			catch (...) {
+				exp = Expression(token);
+			}
+		}
+
 		tokens.pop_front();
-		while (tokens.front() != right) {
+		while (tokens.front() != right) { 
 			exp.append(readTokens(tokens));
 		}
 		tokens.pop_front(); //pop )
 		return exp;
 	}
 	else if (right == token) {
+		//std::cout << "!!!!!!!!!!!!!!!!!!!";
 		throw std::logic_error("unexpected )");
 	}
 	else {
-		if (token == "True")
+		if (token == "True") {
 			return Expression(true);
-		else if (token == "False")
-			return Expression(false);
-		else {
-			try {
-				return Expression(std::stod(token));
-			}
-			catch (...) {
-				return Expression(token);
-			}
 		}
+		else if (token == "False") {
+			return Expression(false);
+		}
+		try {
+			std::stringstream value(token);
+			double d;
+			value >> d;
+			if (value.fail()) { //??
+				//std::cout << "!!!!!!!!!!!!" << std::endl;
+				throw std::logic_error("not a num");
+			}
+			if (value.eof())
+				return Expression(d);
+			else
+				throw std::invalid_argument("bad number string");
+		} catch (std::invalid_argument e) {
+			throw e;
+		} catch (...) {
+			return Expression(token);
+		}
+		
 	}
 }
 
 bool Interpreter::parse(std::istream & expression) noexcept {
-	std::string tmpString(std::istreambuf_iterator<char>(expression), {});
-	
+	std::string tmpString((std::istreambuf_iterator<char>(expression)),
+		std::istreambuf_iterator<char>());
+
+	std::list<std::string> tmpSizeList = tok.tokenize(tmpString);
+	int left = std::count(tmpSizeList.begin(), tmpSizeList.end(), "(");
+	int right = std::count(tmpSizeList.begin(), tmpSizeList.end(), ")");
+	if (left != right)
+		return false;
+	std::string leftParan = "(";
+	if (tmpSizeList.size() != 0 && tmpSizeList.front() != leftParan) {
+		return false;
+	}
 	try {
-		ast = readTokens(tok.tokenize(tmpString));
+		ast = readTokens(tmpSizeList);
+		if (tmpSizeList.size() != 0) {
+			return false;
+		}
 		return true;
 	}
 	catch (...) {
-		//std::cout << "ERROR CAUGHT";
 		return false;
 	}
 }
@@ -83,11 +141,14 @@ Expression Interpreter::recurseEval(Expression curr) {
 				return envir.getVal(curr.getSymbolValue());
 			}
 			else {
-				return curr;
+				throw InterpreterSemanticError("Symbol not found");
 			}
 		}
-		else {
-			return curr;
+		else if (curr.getType() == AtomType::Boolean){
+			return Expression(curr.getBooleanValue());
+		}
+		else if (curr.getType() == AtomType::Number) {
+			return Expression(curr.getNumberValue());
 		}
 	}
 	//is a special case
@@ -118,7 +179,8 @@ Expression Interpreter::recurseEval(Expression curr) {
 			}
 			else if (tmpArgs.front().getSymbolValue() == "if" || 
 					tmpArgs.front().getSymbolValue() == "define" ||
-					tmpArgs.front().getSymbolValue() == "begin") {
+					tmpArgs.front().getSymbolValue() == "begin" ||
+					envir.varExists(tmpArgs.front().getSymbolValue())) {
 				throw InterpreterSemanticError("Cannot redefine a symbol");
 			}
 			else {
@@ -143,15 +205,10 @@ Expression Interpreter::recurseEval(Expression curr) {
 		//function call
 		Environment::funcPtr function = envir.getFunc(curr.getSymbolValue());
 		if (function == nullptr) {
-			throw InterpreterSemanticError("Invalid symbol");
+			throw InterpreterSemanticError("No such procedure");
 		}
 		else {
 			return (envir.*function)(answers);
 		}
-
-	}
-
-	else {
-		throw InterpreterSemanticError("asdf");
 	}
 }

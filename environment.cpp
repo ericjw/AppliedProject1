@@ -34,10 +34,16 @@ Environment::funcPtr Environment::getFunc(std::string arg) {
 }
 
 Expression Environment::notFunc(Expression exp) {
-	return Expression(!exp.getBooleanValue());
+	if (exp.getArgs().size() != 1) {
+		throw InterpreterSemanticError("Invalid number of arguments to not");
+	}
+	return Expression(!exp.getArgs().at(0).getBooleanValue());
 }
 
 Expression Environment::andFunc(Expression exp) {
+	if (exp.getArgs().size() < 2) {
+		throw InterpreterSemanticError("Invalid number of arguments to and");
+	}
 	bool value = true;
 	for (auto iter : exp.getArgs()) {
 		value = value && iter.getBooleanValue();
@@ -46,7 +52,10 @@ Expression Environment::andFunc(Expression exp) {
 }
 
 Expression Environment::orFunc(Expression exp) {
-	bool value = true;
+	if (exp.getArgs().size() < 2) {
+		throw InterpreterSemanticError("Invalid number of arguments to or");
+	}
+	bool value = exp.getArgs().front().getBooleanValue();
 	for (auto iter : exp.getArgs()) {
 		value = value || iter.getBooleanValue();
 	}
@@ -54,30 +63,45 @@ Expression Environment::orFunc(Expression exp) {
 }
 
 Expression Environment::lessFunc(Expression exp) {
+	if (exp.getArgs().size() != 2) {
+		throw InterpreterSemanticError("Invalid number of arguments to <");
+	}
 	std::vector<Expression> tmp = exp.getArgs();
 	bool value = tmp.front().getNumberValue() < tmp.at(1).getNumberValue();
 	return Expression(value);
 }
 
 Expression Environment::greaterFunc(Expression exp) {
+	if (exp.getArgs().size() != 2) {
+		throw InterpreterSemanticError("Invalid number of arguments to >");
+	}
 	std::vector<Expression> tmp = exp.getArgs();
 	bool value = tmp.front().getNumberValue() > tmp.at(1).getNumberValue();
 	return Expression(value);
 }
 
 Expression Environment::less_equalFunc(Expression exp) {
+	if (exp.getArgs().size() != 2) {
+		throw InterpreterSemanticError("Invalid number of arguments to <");
+	}
 	std::vector<Expression> tmp = exp.getArgs();
 	bool value = tmp.front().getNumberValue() <= tmp.at(1).getNumberValue();
 	return Expression(value);
 }
 
 Expression Environment::greater_equalFunc(Expression exp) {
+	if (exp.getArgs().size() != 2) {
+		throw InterpreterSemanticError("Invalid number of arguments to >=");
+	}
 	std::vector<Expression> tmp = exp.getArgs();
 	bool value = tmp.front().getNumberValue() >= tmp.at(1).getNumberValue();
 	return Expression(value);
 }
 
 Expression Environment::equalFunc(Expression exp) {
+	if (exp.getArgs().size() != 2) {
+		throw InterpreterSemanticError("Invalid number of arguments to <=");
+	}
 	std::vector<Expression> tmp = exp.getArgs();
 	bool value = tmp.front().getNumberValue() == tmp.at(1).getNumberValue();
 	return Expression(value);
@@ -85,6 +109,9 @@ Expression Environment::equalFunc(Expression exp) {
 
 
 Expression Environment::plusFunc(Expression exp) {
+	if (exp.getArgs().size() < 2) {
+		throw InterpreterSemanticError("Invalid number of arguments to +");
+	}
 	double value = 0;
 	for (auto iter : exp.getArgs()) {
 		value += iter.getNumberValue();
@@ -92,17 +119,23 @@ Expression Environment::plusFunc(Expression exp) {
 	return Expression(value);
 }
 
-Expression Environment::negFunc(Expression exp) {
-	return Expression(-exp.getArgs().front().getNumberValue());
-}
-
 Expression Environment::minusFunc(Expression exp) {
 	std::vector<Expression> tmp = exp.getArgs();
-	double value = tmp.front().getNumberValue() - tmp.at(1).getNumberValue();
-	return Expression(value);
+	if (tmp.size() == 2) {
+		double value = tmp.front().getNumberValue() - tmp.at(1).getNumberValue();
+		return Expression(value);
+	}
+	else if (tmp.size() == 1) {
+		return Expression(-tmp.front().getNumberValue());
+	}
+	else
+		throw InterpreterSemanticError("Invalid number of arguments to -");
 }
 
 Expression Environment::multFunc(Expression exp) {
+	if (exp.getArgs().size() < 2) {
+		throw InterpreterSemanticError("Invalid number of arguments to *");
+	}
 	double value = 1.0;
 	for (auto iter : exp.getArgs()) {
 		value *= iter.getNumberValue();
@@ -111,6 +144,9 @@ Expression Environment::multFunc(Expression exp) {
 }
 
 Expression Environment::divFunc(Expression exp) {
+	if (exp.getArgs().size() != 2) {
+		throw InterpreterSemanticError("Invalid number of arguments to /");
+	}
 	std::vector<Expression> tmp = exp.getArgs();
 	double value = tmp.front().getNumberValue() / tmp.at(1).getNumberValue();
 	return Expression(value);

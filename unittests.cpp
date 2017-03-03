@@ -77,24 +77,18 @@ TEST_CASE("tests interpreter ast creation", "[interpreter]") {
 	std::list<std::string> test;
 
 	//test readtokens directly
-	//test = {"(", "+", "a", "(", "+", "-", "(", "4", ")", "4", ")", ")", ")"};
-	//root = inter.readTokens(test);
-	//REQUIRE(root.getExpVectorSize() == 2);
-	/*
-	test = { "(", "(", "(", "(", "+", "a", "(", "+", "-", "(", "4", ")", "4", ")", ")", ")" };
-	try {
-		root = inter.readTokens(test);
-		std::cout << "no exception" << std::endl;
-	}
-	catch (...) {
-		std::cout << "exception" << std::endl;
-	}
-	*/
+	test = {"(", "+", "a", "(", "+", "-", "(", "4", ")", "4", ")", ")", ")"};
+	root = inter.readTokens(test);
+	REQUIRE(root.getExpVectorSize() == 2);
+	test = { "(", "+", "a", "(", "+", "-", "(", "4", ")", "4", ")", ")" };
+	REQUIRE(inter.readTokens(test).getExpVectorSize() == 2);
 
 	//test exceptions from parse
 	std::istringstream excep("((((((if (< a b) b a)");
 	REQUIRE(!inter.parse(excep));
 	excep.str("(if (< a b) b a))))))"); //no exception is thrown								
+	REQUIRE(!inter.parse(excep));
+	excep.str("( )");
 	REQUIRE(!inter.parse(excep));
 	excep.str("");
 	REQUIRE(!inter.parse(excep));
@@ -119,22 +113,27 @@ TEST_CASE("tests interpreter eval", "[interpreter]") {
 	Interpreter inter;
 	inter.parse(is);
 	Expression tmp = inter.eval();
-	std::cout << "!!!!!!!!!!-----> if stmnt " << tmp.getNumberValue() << std::endl;
+	std::cout << "---------> if stmnt " << tmp.getNumberValue() << std::endl;
 
 	is.str("(begin (define r 10) (* pi (* r r)))"); // works
 	inter.parse(is);
 	tmp = inter.eval();
-	std::cout << "!!!!!!!!!!-----> longer " << tmp.getNumberValue() << std::endl;
+	REQUIRE(tmp.getType() == AtomType::Number);
+	REQUIRE(tmp.getNumberValue() == 100 * std::atan2(0, -1));
+	Expression tmpEq = Expression(100 * std::atan2(0, -1));
+	REQUIRE(tmpEq == tmp);
+	std::cout << "---------> longer " << tmp.getNumberValue() << std::endl;
 
 	is.str("(begin (define a 1)(define b pi)(if (< a b) b a))");
 	inter.parse(is);
 	tmp = inter.eval();
-	std::cout << "!!!!!!!!!!-----> all special " << tmp.getNumberValue() << std::endl;
+	std::cout << "---------> all special " << tmp.getNumberValue() << std::endl;
 }
 
 TEST_CASE("tests environment", "[environment]") {
 	Environment env;
 	env.initialize();
+	Interpreter inter;
 
 	Expression tmp = env.insert("test", Expression(true));
 	REQUIRE(env.varExists("test"));
@@ -144,7 +143,20 @@ TEST_CASE("tests environment", "[environment]") {
 	REQUIRE(env.getFunc("DNE") == nullptr);
 	REQUIRE(typeid(env.getFunc("+")) == typeid(Environment::funcPtr));
 
-	//test all functions here
+	//test all functions 
 
-	REQUIRE(env.notFunc(Expression(false)).getBooleanValue());
+	//and
+	std::istringstream is("(and True False (< 1 2))");
+	inter.parse(is);
+	REQUIRE(!inter.eval().getBooleanValue());
+
+	//or
+	is.str("(or True False (< 1 2))");
+	inter.parse(is);
+	REQUIRE(inter.eval().getBooleanValue());
+
+	//less
+	is.str("(< 2 1)");
+	inter.parse(is);
+	REQUIRE(!inter.eval().getBooleanValue());
 }

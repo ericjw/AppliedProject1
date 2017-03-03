@@ -1,6 +1,7 @@
 #ifndef _ENVIRONMENT_H_
 #define _ENVIRONMENT_H_
 #include "expression.hpp"
+#include "interpreter_semantic_error.hpp"
 
 #include <unordered_map>
 #include <cmath>
@@ -28,7 +29,6 @@ public:
 	Expression greater_equalFunc(Expression arg);
 	Expression equalFunc(Expression arg);
 	Expression plusFunc(Expression arg);
-	Expression negFunc(Expression arg);
 	Expression minusFunc(Expression arg);
 	Expression multFunc(Expression arg);
 	Expression divFunc(Expression arg);

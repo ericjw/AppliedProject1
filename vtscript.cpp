@@ -51,6 +51,11 @@ int main(int argc, char* argv[])
 	else if (argc == 2) {
 		std::string fname(argv[1]);
 		std::ifstream ifs(fname);
+
+		if (!ifs.good()) {
+			std::cout << "Error: Invalid file" << std::endl;
+			return EXIT_FAILURE;
+		}
 		
 		Interpreter inter;
 		if (!inter.parse(ifs)) {

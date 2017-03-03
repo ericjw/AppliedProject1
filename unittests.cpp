@@ -23,6 +23,7 @@ TEST_CASE("tests tokenizer", "[tokenize]") {
 	REQUIRE(outputList == testList);
 
 	testList = {"(", "begin", "(", "define"};
+	//std::cout << "HERE ";
 	outputList = tok.tokenize("(begin (define ;r 10) (* pi (* r r)))");
 
 	REQUIRE(outputList == testList);
@@ -113,7 +114,7 @@ TEST_CASE("tests interpreter eval", "[interpreter]") {
 	Interpreter inter;
 	inter.parse(is);
 	Expression tmp = inter.eval();
-	std::cout << "---------> if stmnt " << tmp.getNumberValue() << std::endl;
+	//std::cout << "---------> if stmnt " << tmp.getNumberValue() << std::endl;
 
 	is.str("(begin (define r 10) (* pi (* r r)))"); // works
 	inter.parse(is);
@@ -122,12 +123,12 @@ TEST_CASE("tests interpreter eval", "[interpreter]") {
 	REQUIRE(tmp.getNumberValue() == 100 * std::atan2(0, -1));
 	Expression tmpEq = Expression(100 * std::atan2(0, -1));
 	REQUIRE(tmpEq == tmp);
-	std::cout << "---------> longer " << tmp.getNumberValue() << std::endl;
+	//std::cout << "---------> longer " << tmp.getNumberValue() << std::endl;
 
 	is.str("(begin (define a 1)(define b pi)(if (< a b) b a))");
 	inter.parse(is);
 	tmp = inter.eval();
-	std::cout << "---------> all special " << tmp.getNumberValue() << std::endl;
+	//std::cout << "---------> all special " << tmp.getNumberValue() << std::endl;
 }
 
 TEST_CASE("tests environment", "[environment]") {

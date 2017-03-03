@@ -99,10 +99,13 @@ Expression Interpreter::readTokens(std::list<std::string>& tokens) {
 }
 
 bool Interpreter::parse(std::istream & expression) noexcept {
-	std::string tmpString((std::istreambuf_iterator<char>(expression)),
-		std::istreambuf_iterator<char>());
+
+	std::stringstream buffer;
+	buffer << expression.rdbuf();
+	std::string tmpString = buffer.str();
 
 	std::list<std::string> tmpSizeList = tok.tokenize(tmpString);
+
 	int left = std::count(tmpSizeList.begin(), tmpSizeList.end(), "(");
 	int right = std::count(tmpSizeList.begin(), tmpSizeList.end(), ")");
 	if (left != right)

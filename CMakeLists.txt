@@ -16,7 +16,7 @@ set(interpreter_src
 set(test_src
   catch.hpp
   unittests.cpp
-  #test_interpreter.cpp
+  test_interpreter.cpp
 )
 
 # EDIT
@@ -46,4 +46,4 @@ add_executable(unittests ${interpreter_src} ${test_src})
 set_property(TARGET unittests PROPERTY CXX_STANDARD 11)
 
 enable_testing()
-add_test(unittests unittests.cpp)
+add_test(unittests unittests)

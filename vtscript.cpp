@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
 		std::string fname(argv[1]);
 		std::ifstream ifs(fname);
 
-		if (!ifs.good()) {
+		if (!ifs.is_open()) {
 			std::cout << "Error: Invalid file" << std::endl;
 			return EXIT_FAILURE;
 		}

@@ -125,11 +125,10 @@ Expression Environment::minusFunc(Expression exp) {
 		double value = tmp.front().getNumberValue() - tmp.at(1).getNumberValue();
 		return Expression(value);
 	}
-	else if (tmp.size() == 1) {
+	if (tmp.size() == 1) {
 		return Expression(-tmp.front().getNumberValue());
 	}
-	else
-		throw InterpreterSemanticError("Invalid number of arguments to -");
+	throw InterpreterSemanticError("Invalid number of arguments to -");
 }
 
 Expression Environment::multFunc(Expression exp) {

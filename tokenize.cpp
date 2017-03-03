@@ -3,6 +3,7 @@
 //tokenizes input given as a string
 std::list<std::string> Tokenizer::tokenize(std::string input) {
 	//scrub comments
+	/*
 	while (input.find(";") != std::string::npos) {
 		int begin = input.find(";");
 		int end = input.find("\n");
@@ -11,6 +12,28 @@ std::list<std::string> Tokenizer::tokenize(std::string input) {
 		else
 			input = input.substr(0, begin) + input.substr(end);
 	}
+	*/
+
+	while (input.find(";") != std::string::npos) {
+		while (input.substr(0, 1) == "\n")
+			input.replace(0, 1, "");
+		size_t begin = input.find(";");
+		size_t end = input.find("\n");
+		if (end < begin) {
+			input.replace(end, 1, " ");
+		}
+		else {
+			if (end == std::string::npos) {
+				input.replace(begin, input.size() - 1, " ");
+			}
+			else {
+				end = end + 1;
+				input.replace(begin, end-begin, " ");
+			}
+		}
+	}
+
+	//std::cout << "*" << input << std::endl;
 
 	//pads all parentheses with whitespace
 	padParen(input);
